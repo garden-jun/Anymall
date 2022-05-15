@@ -275,6 +275,13 @@ class _SalePageState extends State<SalePage> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
                 ),
 
+                // 지도 불러오기
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                ),
+
+                // 게시하기 버튼
                 ElevatedButton(
                   onPressed: () {
                     // Respond to button press
