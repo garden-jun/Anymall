@@ -1,3 +1,4 @@
+import 'package:anymall/repository/Repository.dart';
 import 'package:flutter/material.dart';
 import 'PostPage.dart';
 import 'DetailPage.dart';
@@ -10,10 +11,31 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  TextEditingController Comment = new TextEditingController();
+
+  void aaa() async {
+    TotalRepository tot = TotalRepository();
+    try {
+      await tot.ListPage();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void searchcomment(String comment) async {
+    TotalRepository tot = TotalRepository();
+    try {
+      await tot.Search(comment);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    aaa();
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -28,7 +50,8 @@ class _ListPageState extends State<ListPage> {
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(12))),
-                      child: const TextField(
+                      child: TextField(
+                        controller: Comment,
                         decoration: InputDecoration(
                             hintText: "검색",
                             prefixIcon: Icon(Icons.search),
@@ -68,6 +91,7 @@ class _ListPageState extends State<ListPage> {
                           GestureDetector(
                             child: Icon(Icons.add_box_outlined),
                             onTap: () {
+                              searchcomment("고양이");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

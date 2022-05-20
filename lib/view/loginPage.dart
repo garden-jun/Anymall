@@ -10,7 +10,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   Color _color = Color(0xffF0F2FF);
   Color _color2 = Color(0xffA4A9E5);
-
+  TextEditingController logIn = new TextEditingController();
+  TextEditingController password = new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: logIn,
                 style: TextStyle(fontSize: 11),
                 decoration: const InputDecoration(
                   labelText: '아이디 입력',
@@ -84,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 50,
               child: TextFormField(
+                controller: password,
                 style: TextStyle(fontSize: 11),
                 decoration: const InputDecoration(
                   labelText: '비밀번호 입력',
@@ -125,8 +128,9 @@ class _LoginPageState extends State<LoginPage> {
 
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ListPage()));
+                aaa();
+                //Navigator.push(context,
+                //MaterialPageRoute(builder: (context) => ListPage()));
               },
               child: Text("로그인"),
               style: ElevatedButton.styleFrom(
@@ -174,8 +178,18 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void aaa() {
+  void aaa() async {
     TotalRepository tot = TotalRepository();
-    tot.logIn({"logInId": "harryjung0330", "password": "abacaded123"});
+    Map<String, dynamic> response =
+        await tot.logIn({"logInId": logIn.text, "password": password.text});
+    try {
+      if (response["status"] == 0) {
+        await tot.storeLoginDb(logIn.text);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ListPage()));
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
