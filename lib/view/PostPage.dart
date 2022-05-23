@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:anymall/repository/Repository.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key}) : super(key: key);
@@ -10,6 +11,29 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   final ImagePicker _picker = ImagePicker();
+  TextEditingController title = new TextEditingController();
+  TextEditingController price = new TextEditingController();
+  TextEditingController tags = new TextEditingController();
+  TextEditingController delieveryType = new TextEditingController();
+  TextEditingController x_coord = new TextEditingController();
+  TextEditingController y_coord = new TextEditingController();
+  TextEditingController pict1 = new TextEditingController();
+  TextEditingController pict2 = new TextEditingController();
+  TextEditingController content = new TextEditingController();
+  TextEditingController address = new TextEditingController();
+  TextEditingController address2 = new TextEditingController();
+  TextEditingController isSold = new TextEditingController();
+
+  void aaa() async {
+    TotalRepository tot = TotalRepository();
+    Map<String, dynamic> response =
+        await tot.PostAPI({"title": title.text, "price": price.text});
+    try {
+      if (response["status"] == 0) {}
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +69,13 @@ class _PostPageState extends State<PostPage> {
                         "글 제목",
                         style: TextStyle(fontSize: 17),
                       ),
-                      TextInput(),
+                      TextInput(item: title),
                       const SizedBox(height: 18),
                       Text(
                         "가격",
                         style: TextStyle(fontSize: 17),
                       ),
-                      TextInput(),
+                      TextInput(item: price),
                       const SizedBox(height: 18),
                       Row(
                         children: [
@@ -133,14 +157,14 @@ class _PostPageState extends State<PostPage> {
                       ),
                       Row(
                         children: [
-                          Expanded(child: TextInput()),
+                          Expanded(child: TextInput(item: address)),
                           const SizedBox(width: 12),
                           ElevatedButton(
                               onPressed: () {}, child: const Text("주소찾기"))
                         ],
                       ),
                       const SizedBox(height: 10),
-                      TextInput(),
+                      TextInput(item: address2),
                       const SizedBox(height: 18),
                       Row(
                         children: [
@@ -202,7 +226,8 @@ class _PostPageState extends State<PostPage> {
 }
 
 class TextInput extends StatelessWidget {
-  const TextInput({Key? key}) : super(key: key);
+  final TextEditingController item;
+  const TextInput({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -211,8 +236,9 @@ class TextInput extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.grey.shade200,
           borderRadius: const BorderRadius.all(Radius.circular(4))),
-      child: const TextField(
+      child: TextField(
         decoration: InputDecoration(border: InputBorder.none),
+        controller: item,
       ),
     );
   }

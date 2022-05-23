@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:anymall/repository/Repository.dart';
 
 class DetailPage extends StatefulWidget {
   const DetailPage({Key? key}) : super(key: key);
@@ -9,8 +10,18 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  void aaa() async {
+    TotalRepository tot = TotalRepository();
+    try {
+      await tot.DetailItem();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    aaa();
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
