@@ -72,7 +72,6 @@ class TotalRepository {
       Uri url = Uri.parse(
           'https://kdh3keh6h4.execute-api.ap-northeast-2.amazonaws.com/test/sellcomment');
       // Uri url = Uri.https(authority, loginPath);
-      // result = await http.post(url, body: json.encode(requestBody));
       logInId = await getLoginId();
       // requestBody["title"]
       // requestBody["price"]

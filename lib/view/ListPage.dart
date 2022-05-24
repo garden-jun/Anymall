@@ -12,14 +12,15 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   TextEditingController Comment = new TextEditingController();
-  Map<String, dynamic> sellComments = {
-    "pict": "",
-    "title": "",
-    "distance": "",
-    "price": "",
-    "sellCommentId": "",
-    "isSold": ""
-  };
+  Map<String, dynamic>? sellComments;
+  //  = {
+  //   "pict": "123",
+  //   "title": "abava",
+  //   "distance": "",
+  //   "price": "",
+  //   "sellCommentId": "",
+  //   "isSold": ""
+  // };
 
   void aaa() async {
     TotalRepository tot = TotalRepository();
@@ -43,7 +44,12 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    aaa();
+    void initState() {
+      aaa();
+    }
+
+    print("현재 사용자 데이터 확인");
+    print(sellComments);
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(

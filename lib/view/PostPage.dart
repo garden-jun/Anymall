@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:anymall/repository/Repository.dart';
+import 'ListPage.dart';
+import '../Map/map_position.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   final ImagePicker _picker = ImagePicker();
+  XFile? imagefile;
   TextEditingController title_ = new TextEditingController();
   TextEditingController price = new TextEditingController();
   TextEditingController tags = new TextEditingController();
@@ -29,7 +32,10 @@ class _PostPageState extends State<PostPage> {
     Map<String, dynamic> response =
         await tot.PostAPI({"title": title_.text, "price": price.text});
     try {
-      if (response["status"] == 0) {}
+      if (response["status"] == 0) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ListPage()));
+      }
     } catch (e) {
       print(e);
     }
@@ -103,8 +109,16 @@ class _PostPageState extends State<PostPage> {
                         children: [
                           GestureDetector(
                             onTap: () async {
-                              final XFile? image = await _picker.pickImage(
-                                  source: ImageSource.gallery);
+                              final image = await _picker.pickImage(
+                                  source: ImageSource.gallery,
+                                  imageQuality: 30 // 이미지 크기 압축
+                                  );
+                              if (image?.path != null) {
+                                setState(() {
+                                  imagefile = XFile(image!.path);
+                                  // _selectedFiles.clear();
+                                });
+                              }
                             },
                             child: Container(
                               width: 80,
@@ -160,7 +174,13 @@ class _PostPageState extends State<PostPage> {
                           Expanded(child: TextInput(item: address)),
                           const SizedBox(width: 12),
                           ElevatedButton(
-                              onPressed: () {}, child: const Text("주소찾기"))
+                              onPressed: () {
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => MapPosition()));
+                              },
+                              child: const Text("주소찾기"))
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -215,7 +235,15 @@ class _PostPageState extends State<PostPage> {
             Row(children: [
               Expanded(
                   child: ElevatedButton(
-                      onPressed: () {}, child: const Text("게시하기")))
+                      onPressed: () {
+                        aaa();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ListPage()));
+                        print("현재 사용자 데이터 확인22");
+                      },
+                      child: const Text("게시하기")))
             ]),
             const SizedBox(height: 12),
           ],

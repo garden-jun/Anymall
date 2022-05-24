@@ -1,6 +1,7 @@
 import 'package:anymall/view/ListPage.dart';
 import 'package:flutter/material.dart';
 import 'view/loginPage.dart';
+import 'Map/map_position.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
             const InputDecorationTheme(border: OutlineInputBorder()),
         primarySwatch: _createMaterialColor(Color(0xff868cde)),
       ),
-      home: LoginPage(),
+      home: MapPosition(),
     );
   }
 
