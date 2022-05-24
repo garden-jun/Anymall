@@ -11,7 +11,7 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   final ImagePicker _picker = ImagePicker();
-  TextEditingController title = new TextEditingController();
+  TextEditingController title_ = new TextEditingController();
   TextEditingController price = new TextEditingController();
   TextEditingController tags = new TextEditingController();
   TextEditingController delieveryType = new TextEditingController();
@@ -27,7 +27,7 @@ class _PostPageState extends State<PostPage> {
   void aaa() async {
     TotalRepository tot = TotalRepository();
     Map<String, dynamic> response =
-        await tot.PostAPI({"title": title.text, "price": price.text});
+        await tot.PostAPI({"title": title_.text, "price": price.text});
     try {
       if (response["status"] == 0) {}
     } catch (e) {
@@ -69,7 +69,7 @@ class _PostPageState extends State<PostPage> {
                         "글 제목",
                         style: TextStyle(fontSize: 17),
                       ),
-                      TextInput(item: title),
+                      TextInput(item: title_),
                       const SizedBox(height: 18),
                       Text(
                         "가격",

@@ -12,11 +12,19 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   TextEditingController Comment = new TextEditingController();
+  Map<String, dynamic> sellComments = {
+    "pict": "",
+    "title": "",
+    "distance": "",
+    "price": "",
+    "sellCommentId": "",
+    "isSold": ""
+  };
 
   void aaa() async {
     TotalRepository tot = TotalRepository();
     try {
-      await tot.ListPage();
+      sellComments = await tot.ListPage();
     } catch (e) {
       print(e);
     }
