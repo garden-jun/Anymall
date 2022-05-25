@@ -32,16 +32,6 @@ class MapPositionState extends State<MapPosition> {
 
   List<Marker> _markers = [];
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _markers.add(Marker(
-  //       markerId: MarkerId("1"),
-  //       draggable: true,
-  //       onTap: () => print("Marker!"),
-  //       position: LatLng(37.4537251, 126.7960716)));
-  // }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

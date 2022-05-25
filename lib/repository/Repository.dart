@@ -64,39 +64,39 @@ class TotalRepository {
   }
 
   // Post페이지
-  Future<Map<String, dynamic>> PostAPI(Map<String, String> requestBody) async {
-    late http.Response result;
-    // Map<String, dynamic> requestBody = new Map<String, dynamic>();
-    String logInId;
-    try {
-      Uri url = Uri.parse(
-          'https://kdh3keh6h4.execute-api.ap-northeast-2.amazonaws.com/test/sellcomment');
-      // Uri url = Uri.https(authority, loginPath);
-      logInId = await getLoginId();
-      // requestBody["title"]
-      // requestBody["price"]
-      // requestBody["tags"]
-      // requestBody["delieveryType"]
-      // requestBody["x_coord"]
-      // requestBody["y_coord"]
-      // requestBody["pict1"]
-      // requestBody["pick2"]
-      requestBody["log_in_id"] = logInId;
-      // requestBody["content"]
-      // requestBody["address"]
-      // requestBody["isSold"]
+  Future<Map<String, dynamic>> PostAPI(
+      String title, String price, String pict) async {
+    var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://kdh3keh6h4.execute-api.ap-northeast-2.amazonaws.com/test/sellcomment'));
+    String logInId = await getLoginId();
+    request.fields.addAll({
+      'title': title,
+      'price': price,
+      'tags': '["강아지", "고양이"]',
+      'delieveryType': '택배',
+      'x_coord': '127.034629',
+      'y_coord': '37.6491192',
+      'log_in_id': logInId,
+      'content': '바뀜 test.',
+      'address': '서울시 도봉구 쌍문동 286-60',
+      'isSold': '0',
+      'sellCommentId': '3'
+    });
+    request.files.add(await http.MultipartFile.fromPath('pict1', pict));
 
-      result = await http.post(url, body: json.encode(requestBody));
-      print(result.body);
-      print(111111);
-    } catch (e) {
-      print(e);
-      print(2222233333);
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String res = await response.stream.bytesToString();
+      print(res);
+      Map<String, dynamic> resJson = json.decode(res);
+      return resJson;
+    } else {
+      print(response.reasonPhrase);
       return {};
     }
-
-    Map<String, dynamic> res = json.decode(result.body);
-    return res;
   }
 
   Future<Map<String, dynamic>> ListPage() async {
@@ -118,7 +118,7 @@ class TotalRepository {
       return {};
     }
 
-    Map<String, dynamic> res = json.decode(result.body);
+    Map<String, dynamic> res = json.decode(utf8.decode(result.bodyBytes));
     return res;
   }
 
@@ -178,7 +178,7 @@ class TotalRepository {
       return {};
     }
 
-    Map<String, dynamic> res = json.decode(result.body);
+    Map<String, dynamic> res = json.decode(utf8.decode(result.bodyBytes));
     return res;
   }
 }

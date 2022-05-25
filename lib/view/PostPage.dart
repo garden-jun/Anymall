@@ -14,6 +14,7 @@ class PostPage extends StatefulWidget {
 class _PostPageState extends State<PostPage> {
   final ImagePicker _picker = ImagePicker();
   XFile? imagefile;
+  String pict = "";
   TextEditingController title_ = new TextEditingController();
   TextEditingController price = new TextEditingController();
   TextEditingController tags = new TextEditingController();
@@ -29,16 +30,7 @@ class _PostPageState extends State<PostPage> {
 
   void aaa() async {
     TotalRepository tot = TotalRepository();
-    Map<String, dynamic> response =
-        await tot.PostAPI({"title": title_.text, "price": price.text});
-    try {
-      if (response["status"] == 0) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ListPage()));
-      }
-    } catch (e) {
-      print(e);
-    }
+    await tot.PostAPI(title_.text, price.text, pict);
   }
 
   @override
@@ -116,6 +108,7 @@ class _PostPageState extends State<PostPage> {
                               if (image?.path != null) {
                                 setState(() {
                                   imagefile = XFile(image!.path);
+                                  pict = image.path;
                                   // _selectedFiles.clear();
                                 });
                               }

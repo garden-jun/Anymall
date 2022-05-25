@@ -12,23 +12,38 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   TextEditingController Comment = new TextEditingController();
-  Map<String, dynamic>? sellComments;
-  //  = {
-  //   "pict": "123",
-  //   "title": "abava",
-  //   "distance": "",
-  //   "price": "",
-  //   "sellCommentId": "",
-  //   "isSold": ""
-  // };
+  List<PostItem> sellComments = [];
 
   void aaa() async {
     TotalRepository tot = TotalRepository();
     try {
-      sellComments = await tot.ListPage();
+      Map<String, dynamic> resp = await tot.ListPage();
+      print(resp["sellComments"]);
+
+      for (dynamic temp in resp["sellComments"] ?? []) {
+        Map<String, dynamic> t1 = temp as Map<String, dynamic> ?? {};
+        String title = t1["title"];
+        String content = t1["content"];
+        String distance = t1["distance"].toString();
+        String pict = t1["pict"];
+        String price = t1["price"].toString();
+        String sellCommentId = t1["sellCommentId"].toString();
+
+        sellComments.add(PostItem(
+            title: title,
+            distance: distance,
+            price: price,
+            imagePath: pict,
+            context: context,
+            sellCommentId: sellCommentId));
+      }
+      print("sellComments:");
+      print(sellComments);
     } catch (e) {
       print(e);
     }
+
+    setState(() {});
   }
 
   void searchcomment(String comment) async {
@@ -44,12 +59,10 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    void initState() {
-      aaa();
-    }
+    aaa();
 
     print("현재 사용자 데이터 확인");
-    print(sellComments);
+
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -80,13 +93,16 @@ class _ListPageState extends State<ListPage> {
         toolbarHeight: kToolbarHeight * 2,
       ),
       body: GridView.builder(
+          itemCount: sellComments.length,
           padding: const EdgeInsets.all(24),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 1,
               crossAxisSpacing: 24,
               mainAxisSpacing: 24),
-          itemBuilder: (context, index) => PostItem()),
+          itemBuilder: (context, index) {
+            return sellComments[index];
+          }),
       bottomNavigationBar: Container(
           height: kToolbarHeight + 30,
           width: size.width,
@@ -143,7 +159,27 @@ class _ListPageState extends State<ListPage> {
 }
 
 class PostItem extends StatelessWidget {
-  const PostItem({Key? key}) : super(key: key);
+  late String title;
+  late String distance;
+  late String price;
+  late String imagePath;
+  late BuildContext context;
+  late String sellCommentId;
+
+  PostItem(
+      {required String title,
+      required String distance,
+      required String price,
+      required String imagePath,
+      required BuildContext context,
+      required String sellCommentId}) {
+    this.title = title;
+    this.distance = distance;
+    this.price = price;
+    this.imagePath = imagePath;
+    this.context = context;
+    this.sellCommentId = sellCommentId;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,9 +207,10 @@ class PostItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
+                  child: Image.network(this.imagePath),
                   decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("imgs/cat.jpg"), fit: BoxFit.cover),
+                    // image: DecorationImage(
+                    //     image: Assetimage(this.imagePath), fit: BoxFit.cover),
                     color: Colors.grey.shade200,
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(12),
@@ -186,11 +223,11 @@ class PostItem extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("게시글 제목",
+                      Text(this.title,
                           style: TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
-                      const Text("거리", style: TextStyle(fontSize: 10)),
-                      const Text("가격",
+                      Text(this.distance, style: TextStyle(fontSize: 10)),
+                      Text(this.price,
                           style: TextStyle(
                               fontSize: 12,
                               color: Colors.orange,
