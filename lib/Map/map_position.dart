@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import '../view/PostPage.dart';
 
 class MapPosition extends StatefulWidget {
   @override
@@ -9,83 +10,56 @@ class MapPosition extends StatefulWidget {
 }
 
 class MapPositionState extends State<MapPosition> {
-  Position position;
   Completer<GoogleMapController> _controller = Completer();
-  LatLng selectedLocation;
-  bool loading = false;
-  String selectedAddress;
 
-  @override
-  void initState() {
-    super.initState();
-    _setInitialPostion();
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.4537251, 126.7960716),
+    zoom: 14.4746,
+  );
+
+  Future<LatLng> getCenter() async {
+    final GoogleMapController controller = await _controller.future;
+    LatLngBounds visibleRegion = await controller.getVisibleRegion();
+    LatLng centerLatLng = LatLng(
+      (visibleRegion.northeast.latitude + visibleRegion.southwest.latitude) / 2,
+      (visibleRegion.northeast.longitude + visibleRegion.southwest.longitude) /
+          2,
+    );
+    print("주소찾기 테스트222");
+    print(centerLatLng);
+    return centerLatLng;
   }
 
-  _setInitialPostion() async {
-    position = await Geolocator().getCurrentPosition();
-    setState(() {});
-  }
+  List<Marker> _markers = [];
 
-  _selectLocation(LatLng loc) async {
-    setState(() => loading = true);
-    selectedAddress = await GoogleMapServices.getAddrFromLocation(
-        loc.latitude, loc.longitude);
-    setState(() {
-      loading = false;
-      selectedLocation = loc;
-    });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _markers.add(Marker(
+  //       markerId: MarkerId("1"),
+  //       draggable: true,
+  //       onTap: () => print("Marker!"),
+  //       position: LatLng(37.4537251, 126.7960716)));
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Choose from map'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.check),
-            onPressed: selectedLocation == null
-                ? null
-                : () => Navigator.of(context).pop({
-                      'latitude': selectedLocation.latitude,
-                      'longitude': selectedLocation.longitude,
-                      'address': selectedAddress,
-                    }),
-          )
-        ],
+    return new Scaffold(
+      body: GoogleMap(
+        mapType: MapType.hybrid,
+        initialCameraPosition: _kGooglePlex,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: loading,
-        child: position == null
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : GoogleMap(
-                onTap: _selectLocation,
-                mapType: MapType.normal,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                    position.latitude,
-                    position.longitude,
-                  ),
-                  zoom: 16,
-                ),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-                markers: selectedLocation == null
-                    ? null
-                    : {
-                        Marker(
-                          markerId: MarkerId('selectedLocation'),
-                          position: selectedLocation,
-                          infoWindow: InfoWindow(
-                            title: '선택된 위치',
-                            snippet: selectedAddress,
-                          ),
-                        ),
-                      },
-              ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          print("주소찾기 테스트");
+          getCenter();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PostPage()));
+        },
+        label: Text('위치 확인'),
       ),
     );
   }

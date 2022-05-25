@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
             const InputDecorationTheme(border: OutlineInputBorder()),
         primarySwatch: _createMaterialColor(Color(0xff868cde)),
       ),
-      home: MapPosition(),
+      home: LoginPage(),
     );
   }
 

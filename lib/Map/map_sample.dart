@@ -30,10 +30,10 @@ class MapSampleState extends State<MapSample> {
   );
 
   static final CameraPosition _kLake = CameraPosition(
-      bearing: 19.8334901395799,
+      bearing: 192.8334901395799,
       target: LatLng(37.5399732, 127.0702438),
-      tilt: 150.440717697143555,
-      zoom: 150.151926040649414);
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
 
   @override
   Widget build(BuildContext context) {

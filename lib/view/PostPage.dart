@@ -175,10 +175,10 @@ class _PostPageState extends State<PostPage> {
                           const SizedBox(width: 12),
                           ElevatedButton(
                               onPressed: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => MapPosition()));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MapPosition()));
                               },
                               child: const Text("주소찾기"))
                         ],
