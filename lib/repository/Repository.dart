@@ -152,7 +152,7 @@ class TotalRepository {
     int sellId = 0;
     try {
       sellId = (await _prefs.getInt('comment_id')) ?? 0;
-      print("read login success");
+      print("getSellId success");
     } catch (e) {
       print(e);
     }

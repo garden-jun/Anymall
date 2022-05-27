@@ -10,10 +10,40 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+  late String title;
+  late String address;
+  late String price;
+  late String content;
+  late List<String> tags;
+  late String x_coord;
+  late String y_coord;
+  late String pictUrls;
+  late String owner;
+  // late String open_chatting_link = t1["open_chatting_link"];
+  late String sellCommentId;
+  late String isSold;
+  late String nickname;
+
   void aaa() async {
     TotalRepository tot = TotalRepository();
     try {
-      await tot.DetailItem();
+      Map<String, dynamic> resp = await tot.DetailItem();
+      print(resp["sellComments"]);
+
+      Map<String, dynamic> t1 = resp as Map<String, dynamic> ?? {};
+      title = t1["title"];
+      address = t1["adress"];
+      price = t1["price"];
+      content = t1["content"];
+      tags = t1["tags"];
+      x_coord = t1["x_coord"];
+      y_coord = t1["y_coord"];
+      pictUrls = t1["pictUrls"];
+      owner = t1["owner"];
+      // String open_chatting_link = t1["open_chatting_link"];
+      sellCommentId = t1["sellCommentId"];
+      isSold = t1["isSold"];
+      nickname = t1["nickname"];
     } catch (e) {
       print(e);
     }
