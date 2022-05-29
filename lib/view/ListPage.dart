@@ -46,6 +46,12 @@ class _ListPageState extends State<ListPage> {
     setState(() {});
   }
 
+  @override
+  void initState() {
+    super.initState();
+    aaa();
+  }
+
   void searchcomment(String comment) async {
     TotalRepository tot = TotalRepository();
     try {
@@ -58,8 +64,6 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
-    aaa();
 
     print("현재 사용자 데이터 확인");
 
@@ -186,8 +190,14 @@ class PostItem extends StatelessWidget {
     return InkWell(
       borderRadius: const BorderRadius.all(Radius.circular(12)),
       onTap: () {
+        print("sellcommentId test---------------");
+        print(sellCommentId);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => DetailPage()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailPage(
+                      sellCommentId_w: sellCommentId,
+                    )));
       },
       child: Container(
         decoration: BoxDecoration(

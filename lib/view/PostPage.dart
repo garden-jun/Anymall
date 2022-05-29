@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:anymall/repository/Repository.dart';
 import 'ListPage.dart';
 import '../Map/map_position.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key}) : super(key: key);
@@ -15,12 +17,13 @@ class _PostPageState extends State<PostPage> {
   final ImagePicker _picker = ImagePicker();
   XFile? imagefile;
   String pict = "";
+  late LatLng coord;
   TextEditingController title_ = new TextEditingController();
   TextEditingController price = new TextEditingController();
-  TextEditingController tags = new TextEditingController();
-  TextEditingController delieveryType = new TextEditingController();
-  TextEditingController x_coord = new TextEditingController();
-  TextEditingController y_coord = new TextEditingController();
+  List<String> tags = []; //1번
+  List<String> delieveryType = []; //2번
+  late double x_coord;
+  late double y_coord;
   TextEditingController pict1 = new TextEditingController();
   TextEditingController pict2 = new TextEditingController();
   TextEditingController content = new TextEditingController();
@@ -30,7 +33,8 @@ class _PostPageState extends State<PostPage> {
 
   void aaa() async {
     TotalRepository tot = TotalRepository();
-    await tot.PostAPI(title_.text, price.text, pict);
+    await tot.PostAPI(title_.text, price.text, pict, x_coord, y_coord, tags,
+        delieveryType, content.text);
   }
 
   @override
@@ -91,8 +95,8 @@ class _PostPageState extends State<PostPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          SelectableButton(text: "택배"),
-                          SelectableButton(text: "직거래")
+                          SelectableButton(text: "택배", tags: delieveryType),
+                          SelectableButton(text: "직거래", tags: delieveryType)
                         ],
                       ),
                       const SizedBox(height: 18),
@@ -151,7 +155,8 @@ class _PostPageState extends State<PostPage> {
                             color: Colors.grey.shade200,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(4))),
-                        child: const TextField(
+                        child: TextField(
+                          controller: content,
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: "게시글 내용을 작성해주세요."),
@@ -167,11 +172,13 @@ class _PostPageState extends State<PostPage> {
                           Expanded(child: TextInput(item: address)),
                           const SizedBox(width: 12),
                           ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                coord = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MapPosition()));
+                                x_coord = coord.latitude;
+                                y_coord = coord.longitude;
                               },
                               child: const Text("주소찾기"))
                         ],
@@ -196,25 +203,25 @@ class _PostPageState extends State<PostPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              SelectableButton(text: "강아지"),
-                              SelectableButton(text: "고양이"),
-                              SelectableButton(text: "거북이")
+                              SelectableButton(text: "강아지", tags: tags),
+                              SelectableButton(text: "고양이", tags: tags),
+                              SelectableButton(text: "거북이", tags: tags)
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              SelectableButton(text: "햄스터"),
-                              SelectableButton(text: "포유류"),
-                              SelectableButton(text: "  조류  ")
+                              SelectableButton(text: "햄스터", tags: tags),
+                              SelectableButton(text: "포유류", tags: tags),
+                              SelectableButton(text: "  조류  ", tags: tags)
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              SelectableButton(text: "파충류"),
-                              SelectableButton(text: "  어류  "),
-                              SelectableButton(text: "양서류")
+                              SelectableButton(text: "파충류", tags: tags),
+                              SelectableButton(text: "  어류  ", tags: tags),
+                              SelectableButton(text: "양서류", tags: tags)
                             ],
                           )
                         ],
@@ -267,7 +274,9 @@ class TextInput extends StatelessWidget {
 
 class SelectableButton extends StatefulWidget {
   final String text;
-  const SelectableButton({Key? key, required this.text}) : super(key: key);
+  final List<String> tags;
+  const SelectableButton({Key? key, required this.text, required this.tags})
+      : super(key: key);
 
   @override
   State<SelectableButton> createState() => _SelectableButtonState();
@@ -282,6 +291,11 @@ class _SelectableButtonState extends State<SelectableButton> {
         ? ElevatedButton(
             onPressed: () {
               setState(() {
+                if (_isSelected) {
+                  widget.tags.remove(widget.text);
+                } else {
+                  widget.tags.add(widget.text);
+                }
                 _isSelected = !_isSelected;
               });
             },
@@ -289,6 +303,11 @@ class _SelectableButtonState extends State<SelectableButton> {
         : OutlinedButton(
             onPressed: () {
               setState(() {
+                if (_isSelected) {
+                  widget.tags.remove(widget.text);
+                } else {
+                  widget.tags.add(widget.text);
+                }
                 _isSelected = !_isSelected;
               });
             },

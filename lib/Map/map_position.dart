@@ -27,6 +27,7 @@ class MapPositionState extends State<MapPosition> {
     );
     print("주소찾기 테스트222");
     print(centerLatLng);
+
     return centerLatLng;
   }
 
@@ -43,11 +44,9 @@ class MapPositionState extends State<MapPosition> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
           print("주소찾기 테스트");
-          getCenter();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PostPage()));
+          Navigator.pop(context, await getCenter());
         },
         label: Text('위치 확인'),
       ),
